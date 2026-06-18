@@ -10,12 +10,16 @@ const mailInput = document.getElementById('mail');
 const scoreInput = document.getElementById('score');
 const CitySelect = document.getElementById('city');
 const CourseSelect = document.getElementById('course');
+const SearchInput = document.getElementById('search');
 const SortScores = document.getElementById('lowScores');
 const studentsList = document.getElementById('studentsList');
 function renderStudents() {
     studentsList.innerHTML = '';
-    updateStudentCount(students.length);
-    let sortedStudents = [...students];
+    const searchResult = SearchInput.value;
+    let StudentFound = students.filter(student => student.firstName.includes(searchResult) || student.lastName.includes(searchResult) || student.idnumber.includes(searchResult));
+    updateStudentCount(StudentFound.length);
+    //updateStudentCount(students.length);
+    let sortedStudents = [...StudentFound];
     if (SortScores.value === 'low-high') {
         sortedStudents.sort((a, b) => parseInt(a.score) - parseInt(b.score));
     }
@@ -73,5 +77,7 @@ form.addEventListener('submit', (event) => {
     students.push(student);
     renderStudents();
     form.reset();
-    // studentCount.innerText = `${students.length}`
+    SearchInput.addEventListener('input', () => {
+        renderStudents();
+    });
 });

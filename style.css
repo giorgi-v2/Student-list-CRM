@@ -161,6 +161,15 @@ h1 {
     box-shadow: 0 0 5px var(--accent-hover);
 }
 
+.search-input {
+    display: flex;
+    width: 250px;
+    height: 32px;
+    padding: 4px;
+    border: 1px solid grey;
+    border-radius: 16px;
+}
+
 .button-container {
     display: flex;
     flex-direction: row;
@@ -204,3 +213,4 @@ h1 {
     background-color: rgb(255, 52, 52);
     color: whitesmoke;
 }
+
