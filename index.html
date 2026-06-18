@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="variabels.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="app-container">
+        <h1>Registration form for students</h1>
+
+        <form id="studentForm" class="form">
+            <input type="text" id="name" class="form__input" placeholder="First Name" required>
+            <input type="text" id="surname" class="form__input" placeholder="Last Name" required>
+            <input type="number" id="id" class="form__input" placeholder="ID Number" required>
+            <input type="date" id="date" class="form__input" title="Birth Date" required>
+            <input type="tel" id="phone" class="form__input" placeholder="Phone Number" required>
+            <input type="mail" id="mail" class="form__input" placeholder="E-mail" required>
+            <input type="number" id="score" class="form__input" placeholder="score" required>
+
+            <select name="city" id="city" class="form__select" required>
+                <option value="">Choose city</option>
+                <option value="Tbilisi">Tbilisi</option>
+                <option value="Rustavi">Rustavi</option>
+                <option value="Kutaisi">Kutaisi</option>
+                <option value="Batumi">Batumi</option>
+            </select>
+
+            <select name="course" id="course" class="form__select" required>
+                <option value="">Choose course</option>
+                <option value="Typescript">Typescript</option>
+                <option value="Javascript">Javascript</option>
+                <option value="HTML">HTML</option>
+                <option value="CSS">CSS</option>
+            </select>
+
+            <button class="form__submit" type="submit">
+                Sign Up
+            </button>
+
+        </form>
+
+        <h2>Amount of Students <span id="studentcount">0</span></h2>
+
+        <input type="search" id="search" placeholder="Student Search">
+
+        <select id="lowScores">
+            <option value="default">Default</option>
+            <option value="low-high">Low to High</option>
+            <option value="high-low">High to Low</option>
+        </select>
+
+        <section id="studentsList" class="students-list"></section>
+
+    </main>
+    
+    <section id="studentsList" class="students-list"></section>
+
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
