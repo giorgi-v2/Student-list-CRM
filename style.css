@@ -169,14 +169,38 @@ h1 {
 
 .edit-button {
     display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
     border-radius: 16px;
-    width: 48px;
-    background-color: var(--button-background-color);
+    width: 56px;
+    height: 20px;
+    background-color:#fbf8cd;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .delete-button {
     display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
     border-radius: 16px;
-    width: 48px;
-    background-color: var(--button-background-color);
+    width: 56px;
+    height: 20px;
+    background-color:#fbf8cd;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.edit-button:hover{
+    background-color: rgb(255, 234, 0);
+    color: rgb(48, 48, 48);
+}
+
+.delete-button:hover {
+    background-color: rgb(255, 52, 52);
+    color: whitesmoke;
 }
