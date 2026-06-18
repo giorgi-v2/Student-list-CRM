@@ -37,7 +37,6 @@ function renderStudents(): void {
     let StudentFound = students.filter(student => student.firstName.includes(searchResult) || student.lastName.includes(searchResult)  || student.idnumber.includes(searchResult) );
 
     updateStudentCount(StudentFound.length);
-    //updateStudentCount(students.length);
 
     let sortedStudents: Student[] = [...StudentFound];
 
@@ -65,13 +64,14 @@ function renderStudents(): void {
             <p> ${'City:'} ${''} ${student.city}</p>
             <p> ${'Course:'} ${''} ${student.course}</p>
             <div class='button-container'>
-                <button class='edit-button'> Edit</button>
-                <button class='delete-button'>Delete</button>
+                <button class='edit-button' data-id="${student.id}"> Edit</button>
+                <button class='delete-button' data-id="${student.id}">Delete</button>
             </div>
         </div>
         `;
     });
 }
+
 
 SortScores.addEventListener('change', () => {
     renderStudents();
@@ -110,6 +110,92 @@ form.addEventListener('submit', (event) => {
     renderStudents();
 });
 
+});
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    if (editingStudentId !== null) {
+        const studentIndex = students.findIndex(s => s.id === editingStudentId);
+        
+        if (studentIndex !== -1) {
+            students[studentIndex] = {
+                id: editingStudentId,
+                firstName: FirstNameInput.value,
+                lastName: LastNameInput.value,
+                idnumber: IdNumberInput.value,
+                date: DateInput.value,
+                phone: phoneInput.value,
+                email: mailInput.value,
+                score: scoreInput.value,
+                city: CitySelect.value,
+                course: CourseSelect.value
+            };
+        }
+        editingStudentId = null;
+
+    } else {
+        const existingStudent = students.find((student) => {
+            return student.email === mailInput.value;
+        });
+
+        if (existingStudent) {
+            alert('This student is already registered');
+            return;
+        }
+
+        const student: Student = {
+            id: students.length + 1,
+            firstName: FirstNameInput.value,
+            lastName: LastNameInput.value,
+            idnumber: IdNumberInput.value,
+            date: DateInput.value,
+            phone: phoneInput.value,
+            email: mailInput.value,
+            score: scoreInput.value,
+            city: CitySelect.value,
+            course: CourseSelect.value
+        };
+
+        students.push(student);
+    }
+
+    renderStudents();
+    form.reset();
+});
+
+studentsList.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+
+    if (target.classList.contains('delete-button')) {
+        const studentId = parseInt(target.getAttribute('data-id') || '0');
+        const studentIndex = students.findIndex(s => s.id === studentId);
+        
+        if (studentIndex !== -1) {
+            students.splice(studentIndex, 1);
+            renderStudents();
+        }
+    }
+
+    if (target.classList.contains('edit-button')) {
+        const studentId = parseInt(target.getAttribute('data-id') || '0');
+        const studentToEdit = students.find(s => s.id === studentId);
+        
+        if (studentToEdit) {
+            FirstNameInput.value = studentToEdit.firstName;
+            LastNameInput.value = studentToEdit.lastName;
+            IdNumberInput.value = studentToEdit.idnumber;
+            DateInput.value = studentToEdit.date;
+            phoneInput.value = studentToEdit.phone;
+            mailInput.value = studentToEdit.email;
+            scoreInput.value = studentToEdit.score;
+            CitySelect.value = studentToEdit.city;
+            CourseSelect.value = studentToEdit.course;
+
+            editingStudentId = studentId;
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
 });
 
 export{};
