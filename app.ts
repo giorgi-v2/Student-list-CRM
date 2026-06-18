@@ -4,16 +4,17 @@ interface Student {
     id: number;
     firstName: string;
     lastName: string;
-    idnumber: string,
-    date: string,
+    idnumber: string;
+    date: string;
     phone: string;
     email: string;
-    score: string,
+    score: string;
     city: string;
     course: string;
 }
 
 const students: Student[] = [];
+let editingStudentId: number | null = null;
 
 const form = document.getElementById('studentForm') as HTMLFormElement;
 const FirstNameInput = document.getElementById('name') as HTMLInputElement;
@@ -25,6 +26,7 @@ const mailInput = document.getElementById('mail') as HTMLInputElement;
 const scoreInput = document.getElementById('score') as HTMLInputElement;
 const CitySelect = document.getElementById('city') as HTMLSelectElement;
 const CourseSelect = document.getElementById('course') as HTMLSelectElement;
+const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 const SearchInput = document.getElementById('search') as HTMLInputElement;
 const SortScores = document.getElementById('lowScores') as HTMLSelectElement;
 const studentsList = document.getElementById('studentsList') as HTMLElement;
@@ -32,9 +34,13 @@ const studentsList = document.getElementById('studentsList') as HTMLElement;
 function renderStudents(): void {
     studentsList.innerHTML = '';
 
-    const searchResult = SearchInput.value;
+    const searchResult = SearchInput.value.toLowerCase();
 
-    let StudentFound = students.filter(student => student.firstName.includes(searchResult) || student.lastName.includes(searchResult)  || student.idnumber.includes(searchResult) );
+    let StudentFound = students.filter(student => 
+        student.firstName.toLowerCase().includes(searchResult) || 
+        student.lastName.toLowerCase().includes(searchResult)  || 
+        student.idnumber.includes(searchResult)
+    );
 
     updateStudentCount(StudentFound.length);
 
@@ -53,16 +59,16 @@ function renderStudents(): void {
         
         studentsList.innerHTML += `
         <div class='students-list__item'>
-            <h3>#${student.id} ${''} ${'Fullname:'} ${''} ${student.firstName} ${''} ${student.lastName}</h3>
-            <div class='students-list__field'> ${'ID:'} ${''} ${student.idnumber}  </div>
-            <p> ${'Birthdate:'} ${''} ${student.date}</p>
-            <p> ${'Phone number:'} ${''} ${student.phone}</p>
-            <p> ${'E-mail:'} ${''} ${student.email}</p>
-            <p> ${'Score:'} ${''} ${student.score}</p>
-            ${''} ${failedStatus}
-            ${''} ${passStatus}
-            <p> ${'City:'} ${''} ${student.city}</p>
-            <p> ${'Course:'} ${''} ${student.course}</p>
+            <h3>#${student.id} Fullname: ${student.firstName} ${student.lastName}</h3>
+            <div class='students-list__field'> ID: ${student.idnumber} </div>
+            <p> Birthdate: ${student.date}</p>
+            <p> Phone number: ${student.phone}</p>
+            <p> E-mail: ${student.email}</p>
+            <p> Score: ${student.score}</p>
+            ${failedStatus}
+            ${passStatus}
+            <p> City: ${student.city}</p>
+            <p> Course: ${student.course}</p>
             <div class='button-container'>
                 <button class='edit-button' data-id="${student.id}"> Edit</button>
                 <button class='delete-button' data-id="${student.id}">Delete</button>
@@ -72,44 +78,12 @@ function renderStudents(): void {
     });
 }
 
-
 SortScores.addEventListener('change', () => {
     renderStudents();
 });
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const existingStudent = students.find((student) => {
-        return student.email === mailInput.value;
-    });
-
-    if(existingStudent){
-        alert ('This student is already registered');
-        return;
-    }
-
-    const student: Student = {
-        id: students.length + 1,
-        firstName: FirstNameInput.value,
-        lastName: LastNameInput.value,
-        idnumber: IdNumberInput.value,
-        date: DateInput.value,
-        phone: phoneInput.value,
-        email: mailInput.value,
-        score: scoreInput.value,
-        city: CitySelect.value,
-        course: CourseSelect.value
-    };
-
-    students.push(student);
+SearchInput.addEventListener('input', () => {
     renderStudents();
-    form.reset();
-    
-    SearchInput.addEventListener('input', () => {
-    renderStudents();
-});
-
 });
 
 form.addEventListener('submit', (event) => {
@@ -133,6 +107,7 @@ form.addEventListener('submit', (event) => {
             };
         }
         editingStudentId = null;
+        submitButton.innerText = 'Sign Up';
 
     } else {
         const existingStudent = students.find((student) => {
@@ -145,7 +120,7 @@ form.addEventListener('submit', (event) => {
         }
 
         const student: Student = {
-            id: students.length + 1,
+            id: Date.now(),
             firstName: FirstNameInput.value,
             lastName: LastNameInput.value,
             idnumber: IdNumberInput.value,
@@ -193,9 +168,10 @@ studentsList.addEventListener('click', (event) => {
             CourseSelect.value = studentToEdit.course;
 
             editingStudentId = studentId;
+            submitButton.innerText = 'Done';
             form.scrollIntoView({ behavior: 'smooth' });
         }
     }
 });
 
-export{};
+export {};
