@@ -12,8 +12,8 @@ const mailInput = document.getElementById('mail');
 const scoreInput = document.getElementById('score');
 const CitySelect = document.getElementById('city');
 const CourseSelect = document.getElementById('course');
-const SearchInput = document.getElementById('search');
 const submitButton = form.querySelector('button[type="submit"]');
+const SearchInput = document.getElementById('search');
 const SortScores = document.getElementById('lowScores');
 const studentsList = document.getElementById('studentsList');
 function renderStudents() {
@@ -89,8 +89,9 @@ form.addEventListener('submit', (event) => {
             alert('This student is already registered');
             return;
         }
+        const nextId = students.length > 0 ? Math.max(...students.map((s) => s.id)) + 1 : 1;
         const student = {
-            id: Date.now(),
+            id: nextId,
             firstName: FirstNameInput.value,
             lastName: LastNameInput.value,
             idnumber: IdNumberInput.value,

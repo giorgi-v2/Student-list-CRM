@@ -14,8 +14,8 @@ const mailInput = document.getElementById('mail') as HTMLInputElement;
 const scoreInput = document.getElementById('score') as HTMLInputElement;
 const CitySelect = document.getElementById('city') as HTMLSelectElement;
 const CourseSelect = document.getElementById('course') as HTMLSelectElement;
-const SearchInput = document.getElementById('search') as HTMLInputElement;
 const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+const SearchInput = document.getElementById('search') as HTMLInputElement;
 const SortScores = document.getElementById('lowScores') as HTMLSelectElement;
 const studentsList = document.getElementById('studentsList') as HTMLElement;
 
@@ -107,8 +107,10 @@ form.addEventListener('submit', (event) => {
             return;
         }
 
+        const nextId = students.length > 0 ? Math.max(...students.map((s: any) => s.id)) + 1 : 1;
+
         const student = {
-            id: Date.now(),
+            id: nextId,
             firstName: FirstNameInput.value,
             lastName: LastNameInput.value,
             idnumber: IdNumberInput.value,
