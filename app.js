@@ -61,6 +61,22 @@ SearchInput.addEventListener('input', () => {
     renderStudents();
 });
 form.addEventListener('submit', (event) => {
+    DateInput.setCustomValidity("");
+    if (!DateInput.value)
+        return;
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // Months are 0-indexed
+    const currentDay = today.getDate();
+    const [selectedYear, selectedMonth, selectedDay] = DateInput.value.split('-').map(Number);
+    const selectedDateValue = (selectedYear * 10000) + (selectedMonth * 100) + selectedDay;
+    const todayDateValue = (currentYear * 10000) + (currentMonth * 100) + currentDay;
+    if (selectedDateValue > todayDateValue) {
+        event.preventDefault();
+        DateInput.setCustomValidity("Date cannot be in the future!");
+        DateInput.reportValidity();
+        return;
+    }
     event.preventDefault();
     if (editingStudentId !== null) {
         const studentIndex = students.findIndex((s) => s.id === editingStudentId);
