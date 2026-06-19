@@ -1,5 +1,6 @@
 import { updateStudentCount } from "./student-count.js";
-const students = [];
+import { saveStudents, getStudents } from "./storage.js";
+const students = getStudents();
 let editingStudentId = null;
 const form = document.getElementById('studentForm');
 const FirstNameInput = document.getElementById('name');
@@ -11,14 +12,14 @@ const mailInput = document.getElementById('mail');
 const scoreInput = document.getElementById('score');
 const CitySelect = document.getElementById('city');
 const CourseSelect = document.getElementById('course');
-const submitButton = form.querySelector('button[type="submit"]');
 const SearchInput = document.getElementById('search');
+const submitButton = form.querySelector('button[type="submit"]');
 const SortScores = document.getElementById('lowScores');
 const studentsList = document.getElementById('studentsList');
 function renderStudents() {
     studentsList.innerHTML = '';
     const searchResult = SearchInput.value.toLowerCase();
-    let StudentFound = students.filter(student => student.firstName.toLowerCase().includes(searchResult) ||
+    let StudentFound = students.filter((student) => student.firstName.toLowerCase().includes(searchResult) ||
         student.lastName.toLowerCase().includes(searchResult) ||
         student.idnumber.includes(searchResult));
     updateStudentCount(StudentFound.length);
@@ -62,7 +63,7 @@ SearchInput.addEventListener('input', () => {
 form.addEventListener('submit', (event) => {
     event.preventDefault();
     if (editingStudentId !== null) {
-        const studentIndex = students.findIndex(s => s.id === editingStudentId);
+        const studentIndex = students.findIndex((s) => s.id === editingStudentId);
         if (studentIndex !== -1) {
             students[studentIndex] = {
                 id: editingStudentId,
@@ -102,6 +103,7 @@ form.addEventListener('submit', (event) => {
         };
         students.push(student);
     }
+    saveStudents(students);
     renderStudents();
     form.reset();
 });
@@ -109,15 +111,16 @@ studentsList.addEventListener('click', (event) => {
     const target = event.target;
     if (target.classList.contains('delete-button')) {
         const studentId = parseInt(target.getAttribute('data-id') || '0');
-        const studentIndex = students.findIndex(s => s.id === studentId);
+        const studentIndex = students.findIndex((s) => s.id === studentId);
         if (studentIndex !== -1) {
             students.splice(studentIndex, 1);
+            saveStudents(students);
             renderStudents();
         }
     }
     if (target.classList.contains('edit-button')) {
         const studentId = parseInt(target.getAttribute('data-id') || '0');
-        const studentToEdit = students.find(s => s.id === studentId);
+        const studentToEdit = students.find((s) => s.id === studentId);
         if (studentToEdit) {
             FirstNameInput.value = studentToEdit.firstName;
             LastNameInput.value = studentToEdit.lastName;
@@ -134,3 +137,4 @@ studentsList.addEventListener('click', (event) => {
         }
     }
 });
+renderStudents();

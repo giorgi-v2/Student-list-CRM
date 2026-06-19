@@ -1,19 +1,7 @@
 import { updateStudentCount } from "./student-count.js";
+import { saveStudents, getStudents } from "./storage.js";
 
-interface Student {
-    id: number;
-    firstName: string;
-    lastName: string;
-    idnumber: string;
-    date: string;
-    phone: string;
-    email: string;
-    score: string;
-    city: string;
-    course: string;
-}
-
-const students: Student[] = [];
+const students = getStudents();
 let editingStudentId: number | null = null;
 
 const form = document.getElementById('studentForm') as HTMLFormElement;
@@ -26,8 +14,8 @@ const mailInput = document.getElementById('mail') as HTMLInputElement;
 const scoreInput = document.getElementById('score') as HTMLInputElement;
 const CitySelect = document.getElementById('city') as HTMLSelectElement;
 const CourseSelect = document.getElementById('course') as HTMLSelectElement;
-const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 const SearchInput = document.getElementById('search') as HTMLInputElement;
+const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
 const SortScores = document.getElementById('lowScores') as HTMLSelectElement;
 const studentsList = document.getElementById('studentsList') as HTMLElement;
 
@@ -36,7 +24,7 @@ function renderStudents(): void {
 
     const searchResult = SearchInput.value.toLowerCase();
 
-    let StudentFound = students.filter(student => 
+    let StudentFound = students.filter((student: any) => 
         student.firstName.toLowerCase().includes(searchResult) || 
         student.lastName.toLowerCase().includes(searchResult)  || 
         student.idnumber.includes(searchResult)
@@ -44,7 +32,7 @@ function renderStudents(): void {
 
     updateStudentCount(StudentFound.length);
 
-    let sortedStudents: Student[] = [...StudentFound];
+    let sortedStudents: any[] = [...StudentFound];
 
     if (SortScores.value === 'low-high') {
         sortedStudents.sort((a, b) => parseInt(a.score) - parseInt(b.score));
@@ -90,7 +78,7 @@ form.addEventListener('submit', (event) => {
     event.preventDefault();
 
     if (editingStudentId !== null) {
-        const studentIndex = students.findIndex(s => s.id === editingStudentId);
+        const studentIndex = students.findIndex((s: any) => s.id === editingStudentId);
         
         if (studentIndex !== -1) {
             students[studentIndex] = {
@@ -110,7 +98,7 @@ form.addEventListener('submit', (event) => {
         submitButton.innerText = 'Sign Up';
 
     } else {
-        const existingStudent = students.find((student) => {
+        const existingStudent = students.find((student: any) => {
             return student.email === mailInput.value;
         });
 
@@ -119,7 +107,7 @@ form.addEventListener('submit', (event) => {
             return;
         }
 
-        const student: Student = {
+        const student = {
             id: Date.now(),
             firstName: FirstNameInput.value,
             lastName: LastNameInput.value,
@@ -135,6 +123,7 @@ form.addEventListener('submit', (event) => {
         students.push(student);
     }
 
+    saveStudents(students);
     renderStudents();
     form.reset();
 });
@@ -144,17 +133,18 @@ studentsList.addEventListener('click', (event) => {
 
     if (target.classList.contains('delete-button')) {
         const studentId = parseInt(target.getAttribute('data-id') || '0');
-        const studentIndex = students.findIndex(s => s.id === studentId);
+        const studentIndex = students.findIndex((s: any) => s.id === studentId);
         
         if (studentIndex !== -1) {
             students.splice(studentIndex, 1);
+            saveStudents(students);
             renderStudents();
         }
     }
 
     if (target.classList.contains('edit-button')) {
         const studentId = parseInt(target.getAttribute('data-id') || '0');
-        const studentToEdit = students.find(s => s.id === studentId);
+        const studentToEdit = students.find((s: any) => s.id === studentId);
         
         if (studentToEdit) {
             FirstNameInput.value = studentToEdit.firstName;
@@ -173,5 +163,7 @@ studentsList.addEventListener('click', (event) => {
         }
     }
 });
+
+renderStudents();
 
 export {};
